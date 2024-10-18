@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: ME-net Donation API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local server
+  - url: https://dev-api-donation.me-net.or.jp
+    description: Development server
+paths:
+  /api/checkout-session:
+    post:
+      operationId: createCheckoutSession
+      summary: Create Checkout Session
+      tags:
+        - Checkout Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customer
+                - product_id
+                - price
+              properties:
+                customer:
+                  type: object
+                  required:
+                    - name
+                    - email
+                    - phone
+                    - is_public
+                    - display_name
+                    - address
+                  properties:
+                    name:
+                      type: string
+                      example: "John Doe"
+                    email:
+                      type: string
+                      example: "john@example.com"
+                    phone:
+                      type: string
+                      example: "1234567890"
+                    is_public:
+                      type: boolean
+                      example: true
+                    display_name:
+                      type: string
+                      example: "John"
+                    corporate_no:
+                      type: string
+                      nullable: true
+                      example: null
+                    message:
+                      type: string
+                      example: "This is a donation."
+                    address:
+                      type: object
+                      required:
+                        - country
+                        - postal_code
+                        - city
+                        - line1
+                      properties:
+                        country:
+                          type: string
+                          example: "JP"
+                        postal_code:
+                          type: string
+                          example: "12345"
+                        city:
+                          type: string
+                          example: "New York"
+                        line1:
+                          type: string
+                          example: "123 Main St"
+                        line2:
+                          type: string
+                          nullable: true
+                          example: null
+                product_id:
+                  type: string
+                  example: "prod_Q2GxSqbpfzdba4"
+                price:
+                  type: number
+                  example: 9999.0
+      responses:
+        '201':
+          description: Checkout Session successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      donor:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: "john@example.com"
+                          donor_external_id:
+                            type: string
+                            example: "497239c7-a608-467a-aff4-9be067bbe48a"
+                          stripe_customer_id:
+                            type: string
+                            example: "cus_R3HZqz0iiqvl7z"
+                          name:
+                            type: string
+                            example: "John Doe"
+                          phone:
+                            type: string
+                            example: "1234567890"
+                          country_code:
+                            type: string
+                            example: "JP"
+                          postal_code:
+                            type: string
+                            example: "12345"
+                          address:
+                            type: string
+                            example: "New York, 123 Main St, "
+                          is_public:
+                            type: boolean
+                            example: true
+                          display_name:
+                            type: string
+                            example: "John"
+                          corporate_no:
+                            type: string
+                            nullable: true
+                            example: null
+                          message:
+                            type: string
+                            example: "This is a donation."
+                          stripe_customer_object:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: "cus_R3HZqz0iiqvl7z"
+                              object:
+                                type: string
+                                example: "customer"
+                              address:
+                                type: object
+                                properties:
+                                  city:
+                                    type: string
+                                    example: "New York"
+                                  country:
+                                    type: string
+                                    example: "JP"
+                                  line1:
+                                    type: string
+                                    example: "123 Main St"
+                                  line2:
+                                    type: string
+                                    example: ""
+                                  postal_code:
+                                    type: string
+                                    example: "12345"
+                                  state:
+                                    type: string
+                                    nullable: true
+                                    example: null
+                              balance:
+                                type: integer
+                                example: 0
+                              created:
+                                type: integer
+                                example: 1729238010
+                              email:
+                                type: string
+                                example: "john@example.com"
+                      stripe_checkout_session:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "cs_test_a171mEerBChNgEVRshVkcGSK7pn8l4PeCcobnFPsvo40nRy3rMgz2hFodq"
+                          object:
+                            type: string
+                            example: "checkout.session"
+                          amount_subtotal:
+                            type: integer
+                            example: 9999
+                          amount_total:
+                            type: integer
+                            example: 9999
+                          currency:
+                            type: string
+                            example: "jpy"
+                          status:
+                            type: string
+                            example: "open"
+                          url:
+                            type: string
+                            example: "https://checkout.stripe.com/c/pay/cs_test_a171mEerBChNgEVRshVkcGSK7pn8l4PeCcobnFPsvo40nRy3rMgz2hFodq"
+                      stripe_price:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "price_1PQqeODSydiWZpHQB4SV9O0G"
+                          object:
+                            type: string
+                            example: "price"
+                          active:
+                            type: boolean
+                            example: true
+                          currency:
+                            type: string
+                            example: "jpy"
+                          unit_amount:
+                            type: integer
+                            example: 9999
+                      stripe_customer:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "cus_R3HZqz0iiqvl7z"
+                          object:
+                            type: string
+                            example: "customer"
+                          address:
+                            type: object
+                            properties:
+                              city:
+                                type: string
+                                example: "New York"
+                              country:
+                                type: string
+                                example: "JP"
+                              line1:
+                                type: string
+                                example: "123 Main St"
+                              line2:
+                                type: string
+                                example: ""
+                              postal_code:
+                                type: string
+                                example: "12345"
